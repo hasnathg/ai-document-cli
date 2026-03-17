@@ -15,6 +15,10 @@ export async function runAI({ instructions, input, mode }) {
         max_output_tokens: mode === "extract-json" ? 300 : 200,
     });
 
-    return response.output_text?.trim() || "";
-    
-}
+    return {
+        output: response.output_text?.trim() || "",
+        usage: response.usage || null,
+        model: response.model || "unknown-model",
+        status: response.status || "unknown-status",
+    };
+    }

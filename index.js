@@ -38,12 +38,6 @@ async function main() {
     const { estimatedTokens, safeText, wasTrimmed } =
       trimToTokenLimit(text, 2000);
 
-    console.log(`Estimated input tokens: ${estimatedTokens}`);
-
-    if (wasTrimmed) {
-      console.log("⚠️ Input too long. Trimming text...");
-    }
-
     const instructions = getInstructions(mode, style);
 
     if (!instructions) {
@@ -51,13 +45,27 @@ async function main() {
       return;
     }
 
-    console.log(`Mode: ${mode} | Style: ${style}`);
-
-    const out = await runAI({
+    const result = await runAI({
       instructions,
       input: safeText,
       mode,
     });
+
+    const out = result.output;
+
+    console.log("\n--- Request Summary ---");
+    console.log(`Model: ${result.model}`);
+    console.log(`Status: ${result.status}`);
+    console.log(`Mode: ${mode}`);
+    console.log(`Style: ${style}`);
+    console.log(`Estimated input tokens: ${estimatedTokens}`);
+    console.log(`Trimmed input: ${wasTrimmed ? "Yes" : "No"}`);
+
+    if (result.usage) {
+      console.log(`Actual input tokens: ${result.usage.input_tokens ?? "N/A"}`);
+      console.log(`Actual output tokens: ${result.usage.output_tokens ?? "N/A"}`);
+      console.log(`Total tokens: ${result.usage.total_tokens ?? "N/A"}`);
+    }
 
     console.log("\nAI Output:\n");
 
