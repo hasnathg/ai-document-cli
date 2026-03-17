@@ -12,7 +12,7 @@ export async function runAI({ instructions, input, mode }) {
         instructions,
         input,
         reasoning: { effort: "low" },
-        max_output_tokens: mpde === "extract-json" ? 300 : 200,
+        max_output_tokens: mode === "extract-json" ? 300 : 200,
     });
 
     return response.output_text?.trim() || "";
